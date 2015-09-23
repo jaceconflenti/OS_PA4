@@ -1,0 +1,138 @@
+#/!/bin/bash
+
+#File: testscript
+#Author: Andy Sayler
+#Project: CSCI 3753 Programming Assignment 3
+#Create Date: 2012/03/09
+#Modify Date: 2012/03/21
+#Description:
+#	A simple bash script to run a signle copy of each test case
+#	and gather the relevent data.
+
+#ITERATIONS=100000000
+#ITERATIONS2=10000000
+#BYTESTOCOPY=102400
+#BYTESTOCOPY2=10240
+#BLOCKSIZE=1024
+ITERATIONS=1000000
+ITERATIONS2=500000
+BYTESTOCOPY=10000
+BYTESTOCOPY2=5000
+BLOCKSIZE=100
+TIMEFORMAT="wall=%e user=%U system=%S CPU=%P i-switched=%c v-switched=%w \n"
+MAKE="make -s"
+
+echo Building code...
+$MAKE clean
+$MAKE
+
+echo Starting test runs...
+
+echo Calculating pi over $ITERATIONS iterations using SCHED_OTHER with 10 simultaneous process...
+/usr/bin/time -f "$TIMEFORMAT" ./pi-sched $ITERATIONS SCHED_OTHER 10 > /dev/null
+
+echo Calculating pi over $ITERATIONS iterations using SCHED_OTHER with 100 simultaneous process...
+/usr/bin/time -f "$TIMEFORMAT" ./pi-sched $ITERATIONS SCHED_OTHER 100 > /dev/null
+
+echo Calculating pi over $ITERATIONS iterations using SCHED_OTHER with 1000 simultaneous process...
+/usr/bin/time -f "$TIMEFORMAT" ./pi-sched $ITERATIONS SCHED_OTHER 1000 > /dev/null
+
+
+echo Calculating pi over $ITERATIONS iterations using SCHED_FIFO with 10 simultaneous process...
+/usr/bin/time -f "$TIMEFORMAT" sudo ./pi-sched $ITERATIONS SCHED_FIFO 10 > /dev/null
+
+echo Calculating pi over $ITERATIONS iterations using SCHED_FIFO with 100 simultaneous process...
+/usr/bin/time -f "$TIMEFORMAT" sudo ./pi-sched $ITERATIONS SCHED_FIFO 100 > /dev/null
+
+echo Calculating pi over $ITERATIONS iterations using SCHED_FIFO with 1000 simultaneous process...
+/usr/bin/time -f "$TIMEFORMAT" sudo ./pi-sched $ITERATIONS SCHED_FIFO 1000 > /dev/null
+
+
+echo Calculating pi over $ITERATIONS iterations using SCHED_RR with 10 simultaneous process...
+/usr/bin/time -f "$TIMEFORMAT" sudo ./pi-sched $ITERATIONS SCHED_RR 10 > /dev/null
+
+echo Calculating pi over $ITERATIONS iterations using SCHED_RR with 100 simultaneous process...
+/usr/bin/time -f "$TIMEFORMAT" sudo ./pi-sched $ITERATIONS SCHED_RR 100 > /dev/null
+
+echo Calculating pi over $ITERATIONS iterations using SCHED_RR with 1000 simultaneous process...
+/usr/bin/time -f "$TIMEFORMAT" sudo ./pi-sched $ITERATIONS SCHED_RR 1000 > /dev/null
+
+
+
+echo Copying $BYTESTOCOPY bytes in blocks of $BLOCKSIZE from rwinput to rwoutput using SCHED_OTHER
+echo using SCHED_OTHER with 10 simultaneous process...
+/usr/bin/time -f "$TIMEFORMAT" ./rw-sched $BYTESTOCOPY $BLOCKSIZE rwinput rwoutput SCHED_OTHER 10 > /dev/null
+
+echo Copying $BYTESTOCOPY bytes in blocks of $BLOCKSIZE from rwinput to rwoutput using SCHED_OTHER
+echo using SCHED_OTHER with 100 simultaneous process...
+/usr/bin/time -f "$TIMEFORMAT" ./rw-sched $BYTESTOCOPY $BLOCKSIZE rwinput rwoutput SCHED_OTHER 100 > /dev/null
+
+echo Copying $BYTESTOCOPY bytes in blocks of $BLOCKSIZE from rwinput to rwoutput using SCHED_OTHER
+echo using SCHED_OTHER with 1000 simultaneous process...
+/usr/bin/time -f "$TIMEFORMAT" ./rw-sched $BYTESTOCOPY $BLOCKSIZE rwinput rwoutput SCHED_OTHER 1000 > /dev/null
+
+
+echo Copying $BYTESTOCOPY bytes in blocks of $BLOCKSIZE from rwinput to rwoutput using SCHED_FIFO
+echo using SCHED_FIFO with 10 simultaneous process...
+/usr/bin/time -f "$TIMEFORMAT" sudo ./rw-sched $BYTESTOCOPY $BLOCKSIZE rwinput rwoutput SCHED_FIFO 10 > /dev/null
+
+echo Copying $BYTESTOCOPY bytes in blocks of $BLOCKSIZE from rwinput to rwoutput using SCHED_FIFO
+echo using SCHED_FIFO with 100 simultaneous process...
+/usr/bin/time -f "$TIMEFORMAT" sudo ./rw-sched $BYTESTOCOPY $BLOCKSIZE rwinput rwoutput SCHED_FIFO 100 > /dev/null
+
+echo Copying $BYTESTOCOPY bytes in blocks of $BLOCKSIZE from rwinput to rwoutput using SCHED_FIFO
+echo using SCHED_FIFO with 1000 simultaneous process...
+/usr/bin/time -f "$TIMEFORMAT" sudo ./rw-sched $BYTESTOCOPY $BLOCKSIZE rwinput rwoutput SCHED_FIFO 1000 > /dev/null
+
+
+echo Copying $BYTESTOCOPY bytes in blocks of $BLOCKSIZE from rwinput to rwoutput using SCHED_RR
+echo using SCHED_RR with 10 simultaneous process...
+/usr/bin/time -f "$TIMEFORMAT" sudo ./rw-sched $BYTESTOCOPY $BLOCKSIZE rwinput rwoutput SCHED_RR 10 > /dev/null
+
+echo Copying $BYTESTOCOPY bytes in blocks of $BLOCKSIZE from rwinput to rwoutput using SCHED_RR
+echo using SCHED_RR with 100 simultaneous process...
+/usr/bin/time -f "$TIMEFORMAT" sudo ./rw-sched $BYTESTOCOPY $BLOCKSIZE rwinput rwoutput SCHED_RR 100 > /dev/null
+
+echo Copying $BYTESTOCOPY bytes in blocks of $BLOCKSIZE from rwinput to rwoutput using SCHED_RR
+echo using SCHED_RR with 1000 simultaneous process...
+/usr/bin/time -f "$TIMEFORMAT" sudo ./rw-sched $BYTESTOCOPY $BLOCKSIZE rwinput rwoutput SCHED_RR 1000 > /dev/null
+
+
+
+echo Calculating pi over $ITERATIONS2 and Copying $BYTESTOCOPY2 bytes in blocks of $BLOCKSIZE from rwinput to rwoutput using SCHED_OTHER
+echo using SCHED_OTHER with 10 simultaneous process...
+/usr/bin/time -f "$TIMEFORMAT" ./mixed $ITERATIONS2 $BYTESTOCOPY2 $BLOCKSIZE rwinput rwoutput SCHED_OTHER 10 > /dev/null
+
+echo Calculating pi over $ITERATIONS2 and Copying $BYTESTOCOPY2 bytes in blocks of $BLOCKSIZE from rwinput to rwoutput using SCHED_OTHER
+echo using SCHED_OTHER with 100 simultaneous process...
+/usr/bin/time -f "$TIMEFORMAT" ./mixed $ITERATIONS2 $BYTESTOCOPY2 $BLOCKSIZE rwinput rwoutput SCHED_OTHER 100 > /dev/null
+
+echo Calculating pi over $ITERATIONS2 and Copying $BYTESTOCOPY2 bytes in blocks of $BLOCKSIZE from rwinput to rwoutput using SCHED_OTHER
+echo using SCHED_OTHER with 1000 simultaneous process...
+/usr/bin/time -f "$TIMEFORMAT" ./mixed $ITERATIONS2 $BYTESTOCOPY2 $BLOCKSIZE rwinput rwoutput SCHED_OTHER 1000 > /dev/null
+
+
+echo Calculating pi over $ITERATIONS2 and Copying $BYTESTOCOPY2 bytes in blocks of $BLOCKSIZE from rwinput to rwoutput using SCHED_FIFO
+echo using SCHED_FIFO with 10 simultaneous process...
+/usr/bin/time -f "$TIMEFORMAT" sudo ./mixed $ITERATIONS2 $BYTESTOCOPY2 $BLOCKSIZE rwinput rwoutput SCHED_FIFO 10 > /dev/null
+
+echo Calculating pi over $ITERATIONS2 and Copying $BYTESTOCOPY2 bytes in blocks of $BLOCKSIZE from rwinput to rwoutput using SCHED_FIFO
+echo using SCHED_FIFO with 100 simultaneous process...
+/usr/bin/time -f "$TIMEFORMAT" sudo ./mixed $ITERATIONS2 $BYTESTOCOPY2 $BLOCKSIZE rwinput rwoutput SCHED_FIFO 100 > /dev/null
+
+echo Calculating pi over $ITERATIONS2 and Copying $BYTESTOCOPY2 bytes in blocks of $BLOCKSIZE from rwinput to rwoutput using SCHED_FIFO
+echo using SCHED_FIFO with 1000 simultaneous process...
+/usr/bin/time -f "$TIMEFORMAT" sudo ./mixed $ITERATIONS2 $BYTESTOCOPY2 $BLOCKSIZE rwinput rwoutput SCHED_FIFO 1000 > /dev/null
+
+
+echo Calculating pi over $ITERATIONS2 and Copying $BYTESTOCOPY2 bytes in blocks of $BLOCKSIZE from rwinput to rwoutput using SCHED_RR
+echo using SCHED_RR with 10 simultaneous process...
+/usr/bin/time -f "$TIMEFORMAT" sudo ./mixed $ITERATIONS2 $BYTESTOCOPY2 $BLOCKSIZE rwinput rwoutput SCHED_RR 10 > /dev/null
+
+echo Calculating pi over $ITERATIONS2 and Copying $BYTESTOCOPY2 bytes in blocks of $BLOCKSIZE from rwinput to rwoutput using SCHED_RR
+echo using SCHED_RR with 100 simultaneous process...
+/usr/bin/time -f "$TIMEFORMAT" sudo ./mixed $ITERATIONS2 $BYTESTOCOPY2 $BLOCKSIZE rwinput rwoutput SCHED_RR 100 > /dev/null
+
+echo Calculating pi over $ITERATIONS2 and Copying $BYTESTOCOPY2 bytes in blocks of $BLOCKSIZE from rwinput to rwoutput using SCHED_RR
+echo using SCHED_RR with 1000 simultaneous process...
+/usr/bin/time -f "$TIMEFORMAT" sudo ./mixed $ITERATIONS2 $BYTESTOCOPY2 $BLOCKSIZE rwinput rwoutput SCHED_RR 1000 > /dev/null
